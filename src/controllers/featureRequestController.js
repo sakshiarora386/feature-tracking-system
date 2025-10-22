@@ -213,15 +213,8 @@ exports.deleteFeatureRequest = async (req, res, next) => {
       where: { id },
     });
 
-    // Return success message for deletion
-    // Note: Using 200 instead of 204 to include a success message
-    res.status(200).json(
-      formatSuccess(
-        null,
-        'Feature request deleted successfully',
-        200
-      )
-    );
+    // Return 204 No Content status code for successful deletion
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
