@@ -1,0 +1,32 @@
+{
+    "$schema": "./app-schema.json",
+    "screens": [
+        {
+            "title": "Home",
+            "slug": "/",
+            "queries": {}
+        }
+    ],
+    "components": [
+        {
+            "name": "atoms",
+            "desc": "Basic, reusable components with minimal dependencies.",
+            "path": "components/atoms",
+            "files": []
+        },
+        {
+            "name": "molecules",
+            "desc": "Small groups of components that work together.",
+            "path": "components/molecules",
+            "files": []
+        },
+        {
+            "name": "organisms",
+            "desc": "Complex UI components composed of atoms and molecules.",
+            "path": "components/organisms",
+            "files": []
+        }
+    ],
+    "hooks": [],
+    "lib": []
+}

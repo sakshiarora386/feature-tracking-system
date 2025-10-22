@@ -1,0 +1,121 @@
+{
+  "$id": "app-schema.json",
+  "title": "Application",
+  "description": "Schema definition for an Application configuration file, describing its screens, components, hooks, libraries, and store modules.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "title": "Schema Reference",
+      "description": "Optional reference to the JSON Schema file for validation. Can be a URL or a local file path.",
+      "examples": ["./app-schema.json", "http://example.com/schema.json"]
+    },
+    "screens": {
+      "type": "array",
+      "title": "Screens",
+      "description": "List of screen definitions in the application.",
+      "items": { "$ref": "#/$defs/ScreenDefinition" }
+    },
+    "components": {
+      "type": "array",
+      "title": "Components",
+      "description": "UI components organized by folders and files.",
+      "items": { "$ref": "#/$defs/File" }
+    },
+    "hooks": {
+      "type": "array",
+      "title": "Hooks",
+      "description": "Custom React hooks used across the application.",
+      "items": { "$ref": "#/$defs/File" }
+    },
+    "lib": {
+      "type": "array",
+      "title": "Libraries",
+      "description": "Utility libraries and helper modules.",
+      "items": { "$ref": "#/$defs/File" }
+    },
+    "store": {
+      "type": "array",
+      "title": "Store",
+      "description": "Application state management modules.",
+      "items": { "$ref": "#/$defs/File" }
+    }
+  },
+  "required": ["screens", "components", "hooks", "lib"],
+  "additionalProperties": false,
+  "$defs": {
+    "ScreenDefinition": {
+      "type": "object",
+      "title": "Screen Definition",
+      "description": "Defines a single application screen, including title, slug, and query parameters.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "title": "Title",
+          "description": "Human-readable name of the screen.",
+          "examples": ["Login Screen", "Dashboard"]
+        },
+        "slug": {
+          "type": "string",
+          "title": "Slug",
+          "description": "URL-friendly identifier for the screen.",
+          "examples": ["login", "dashboard"]
+        },
+        "queries": {
+          "type": "object",
+          "title": "Queries",
+          "description": "Key-value pairs of query parameters for this screen.",
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "string", "description": "A single query value as a string." },
+              {
+                "type": "array",
+                "description": "Multiple query values as strings.",
+                "items": { "type": "string" }
+              }
+            ]
+          },
+          "examples": [
+            { "sort": "asc" },
+            { "filters": ["active", "verified"] }
+          ]
+        }
+      },
+      "required": ["title", "slug", "queries"],
+      "additionalProperties": false
+    },
+    "File": {
+      "type": "object",
+      "title": "File",
+      "description": "Represents a file or folder within the project structure.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name",
+          "description": "The display name of the file or folder.",
+          "examples": ["index.tsx", "Button"]
+        },
+        "path": {
+          "type": "string",
+          "title": "Path",
+          "description": "Relative file path from the project root.",
+          "examples": ["src/components/Button/index.tsx", "src/screens/Home"]
+        },
+        "desc": {
+          "type": "string",
+          "title": "Description",
+          "description": "Short description of the file's purpose.",
+          "examples": ["Main button component", "Home screen layout"]
+        },
+        "files": {
+          "type": "array",
+          "title": "Child Files",
+          "description": "List of files contained within this folder or related to this file.",
+          "items": { "$ref": "#/$defs/File" }
+        }
+      },
+      "required": ["name", "path", "desc", "files"],
+      "additionalProperties": false
+    }
+  }
+}
