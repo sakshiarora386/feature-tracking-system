@@ -4,9 +4,11 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 const config = require('./config/config');
 const errorHandler = require('./middlewares/errorHandler');
+const swaggerGenerator = require('./middlewares/swaggerGenerator');
 
 // Initialize Express app
 const app = express();
@@ -55,6 +57,13 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Swagger JSON file generator middleware
+app.use(swaggerGenerator({
+  outputPath: path.join(process.cwd(), 'docs', 'swagger.json'),
+  generateOnStart: true,
+  enableEndpoint: true
+}));
 
 // API versioning
 app.use('/api/v1', require('./routes'));
