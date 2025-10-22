@@ -294,7 +294,7 @@ router.put(
  *         description: Feature request ID
  *     responses:
  *       204:
- *         description: Feature request deleted successfully
+ *         description: Feature request deleted successfully (no content)
  *       404:
  *         description: Feature request not found
  */
