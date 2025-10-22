@@ -1,10 +1,15 @@
 const { PrismaClient } = require('@prisma/client');
+const { formatSuccess, formatError } = require('../utils/responseFormatter');
 
 const prisma = new PrismaClient();
 
 /**
  * Create a new feature request
  * @route POST /api/v1/feature-requests
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @returns {Promise<void>}
  */
 exports.createFeatureRequest = async (req, res, next) => {
   try {
@@ -21,7 +26,13 @@ exports.createFeatureRequest = async (req, res, next) => {
       },
     });
 
-    res.status(201).json(featureRequest);
+    res.status(201).json(
+      formatSuccess(
+        featureRequest,
+        'Feature request created successfully',
+        201
+      )
+    );
   } catch (error) {
     next(error);
   }
@@ -70,15 +81,23 @@ exports.getAllFeatureRequests = async (req, res, next) => {
     // Calculate pagination values
     const totalPages = Math.ceil(totalItems / limitNum);
 
-    res.status(200).json({
-      data: featureRequests,
+    const responseData = {
+      items: featureRequests,
       pagination: {
         totalItems,
         currentPage: pageNum,
         totalPages,
         itemsPerPage: limitNum,
       },
-    });
+    };
+
+    res.status(200).json(
+      formatSuccess(
+        responseData,
+        'Feature requests retrieved successfully',
+        200
+      )
+    );
   } catch (error) {
     next(error);
   }
@@ -99,12 +118,22 @@ exports.getFeatureRequestById = async (req, res, next) => {
 
     // Check if feature request exists
     if (!featureRequest) {
-      return res.status(404).json({
-        message: `Feature request with ID ${id} not found`,
-      });
+      return res.status(404).json(
+        formatError(
+          `Feature request with ID ${id} not found`,
+          'FEATURE_REQUEST_NOT_FOUND',
+          404
+        )
+      );
     }
 
-    res.status(200).json(featureRequest);
+    res.status(200).json(
+      formatSuccess(
+        featureRequest,
+        'Feature request retrieved successfully',
+        200
+      )
+    );
   } catch (error) {
     next(error);
   }
@@ -126,9 +155,13 @@ exports.updateFeatureRequestStatus = async (req, res, next) => {
     });
 
     if (!existingRequest) {
-      return res.status(404).json({
-        message: `Feature request with ID ${id} not found`,
-      });
+      return res.status(404).json(
+        formatError(
+          `Feature request with ID ${id} not found`,
+          'FEATURE_REQUEST_NOT_FOUND',
+          404
+        )
+      );
     }
 
     // Update feature request status
@@ -140,7 +173,13 @@ exports.updateFeatureRequestStatus = async (req, res, next) => {
       },
     });
 
-    res.status(200).json(updatedFeatureRequest);
+    res.status(200).json(
+      formatSuccess(
+        updatedFeatureRequest,
+        'Feature request status updated successfully',
+        200
+      )
+    );
   } catch (error) {
     next(error);
   }
@@ -160,9 +199,13 @@ exports.deleteFeatureRequest = async (req, res, next) => {
     });
 
     if (!existingRequest) {
-      return res.status(404).json({
-        message: `Feature request with ID ${id} not found`,
-      });
+      return res.status(404).json(
+        formatError(
+          `Feature request with ID ${id} not found`,
+          'FEATURE_REQUEST_NOT_FOUND',
+          404
+        )
+      );
     }
 
     // Delete feature request
@@ -170,8 +213,15 @@ exports.deleteFeatureRequest = async (req, res, next) => {
       where: { id },
     });
 
-    // Return 204 No Content for successful deletion
-    res.status(204).send();
+    // Return success message for deletion
+    // Note: Using 200 instead of 204 to include a success message
+    res.status(200).json(
+      formatSuccess(
+        null,
+        'Feature request deleted successfully',
+        200
+      )
+    );
   } catch (error) {
     next(error);
   }

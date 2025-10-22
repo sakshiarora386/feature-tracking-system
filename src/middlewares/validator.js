@@ -1,9 +1,11 @@
 const { validationResult } = require('express-validator');
+const { formatError } = require('../utils/responseFormatter');
 
 /**
  * Middleware to validate request data
  * Uses express-validator to check request body, params, or query
  * @param {Array} validations - Array of express-validator validation rules
+ * @returns {Function} Express middleware function
  */
 const validate = (validations) => {
   return async (req, res, next) => {
@@ -24,13 +26,15 @@ const validate = (validations) => {
       message: err.msg,
     }));
     
-    // Return 400 Bad Request with validation errors
-    return res.status(400).json({
-      status: 'error',
-      message: 'Validation error',
-      statusCode: 400,
-      details: formattedErrors,
-    });
+    // Return 400 Bad Request with validation errors using the formatter
+    return res.status(400).json(
+      formatError(
+        'Validation error',
+        'VALIDATION_ERROR',
+        400,
+        formattedErrors
+      )
+    );
   };
 };
 
