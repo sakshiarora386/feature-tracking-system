@@ -82,7 +82,7 @@ exports.getAllFeatureRequests = async (req, res, next) => {
     const totalPages = Math.ceil(totalItems / limitNum);
 
     const responseData = {
-      items: featureRequests,
+      data: featureRequests,
       pagination: {
         totalItems,
         currentPage: pageNum,

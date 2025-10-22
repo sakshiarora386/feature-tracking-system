@@ -6,7 +6,7 @@ const injectedRtkApi = api
   })
   .injectEndpoints({
     endpoints: (build) => ({
-      postFeatureRequests: build.mutation<
+      createFeatureRequest: build.mutation<
         PostFeatureRequestsApiResponse,
         PostFeatureRequestsApiArg
       >({
@@ -52,7 +52,7 @@ const injectedRtkApi = api
         }),
         providesTags: ["Feature Requests"],
       }),
-      getFeatureRequestsById: build.query<
+      getFeatureRequestById: build.query<
         GetFeatureRequestsByIdApiResponse,
         GetFeatureRequestsByIdApiArg
       >({
@@ -61,7 +61,7 @@ const injectedRtkApi = api
         }),
         providesTags: ["Feature Requests"],
       }),
-      deleteFeatureRequestsById: build.mutation<
+      deleteFeatureRequest: build.mutation<
         DeleteFeatureRequestsByIdApiResponse,
         DeleteFeatureRequestsByIdApiArg
       >({
@@ -71,7 +71,7 @@ const injectedRtkApi = api
         }),
         invalidatesTags: ["Feature Requests"],
       }),
-      putFeatureRequestsByIdStatus: build.mutation<
+      updateFeatureRequestStatus: build.mutation<
         PutFeatureRequestsByIdStatusApiResponse,
         PutFeatureRequestsByIdStatusApiArg
       >({
@@ -85,7 +85,14 @@ const injectedRtkApi = api
     }),
     overrideExisting: false,
   });
-export { injectedRtkApi as featureRequestApiApi };
+export { injectedRtkApi as featureRequestApi };
+export const {
+  useCreateFeatureRequestMutation,
+  useGetFeatureRequestsQuery,
+  useGetFeatureRequestByIdQuery,
+  useDeleteFeatureRequestMutation,
+  useUpdateFeatureRequestStatusMutation,
+} = injectedRtkApi;
 export type PostFeatureRequestsApiResponse =
   /** status 201 Feature request created successfully */ FeatureRequest;
 export type PostFeatureRequestsApiArg = {
