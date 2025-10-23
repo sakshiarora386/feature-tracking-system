@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { featureRequestApiApi } from '../services/featureRequestApi';
+import { configureStore } from "@reduxjs/toolkit";
+import { featureRequestApiApi } from "../services/featureRequestApi";
 
 export const store = configureStore({
   reducer: {
