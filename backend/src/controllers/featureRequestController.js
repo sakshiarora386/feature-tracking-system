@@ -72,16 +72,16 @@ exports.getAllFeatureRequests = async (req, res, next) => {
     // Get total count for pagination
     const totalItems = await prisma.featureRequest.count({ where });
 
-    // Get feature requests with filtering, sorting, and pagination
+    // Calculate pagination values
+    const totalPages = Math.ceil(totalItems / limitNum);
+
+    // Fetch feature requests with pagination and filtering
     const featureRequests = await prisma.featureRequest.findMany({
       where,
       orderBy,
       skip,
       take: limitNum,
     });
-
-    // Calculate pagination values
-    const totalPages = Math.ceil(totalItems / limitNum);
 
     const responseData = {
       items: featureRequests,
@@ -92,7 +92,6 @@ exports.getAllFeatureRequests = async (req, res, next) => {
         itemsPerPage: limitNum,
       },
     };
-
     res
       .status(200)
       .json(
