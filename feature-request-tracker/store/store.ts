@@ -1,12 +1,12 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { featureRequestApi } from '../services/featureRequestApi';
+import { configureStore } from "@reduxjs/toolkit";
+import { featureRequestApiApi } from "../services/featureRequestApi";
 
 export const store = configureStore({
   reducer: {
-    [featureRequestApi.reducerPath]: featureRequestApi.reducer,
+    [featureRequestApiApi.reducerPath]: featureRequestApiApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(featureRequestApi.middleware),
+    getDefaultMiddleware().concat(featureRequestApiApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,5 +1,5 @@
-const { PrismaClient } = require('@prisma/client');
-const { formatSuccess, formatError } = require('../utils/responseFormatter');
+const { PrismaClient } = require("@prisma/client");
+const { formatSuccess, formatError } = require("../utils/responseFormatter");
 
 const prisma = new PrismaClient();
 
@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
  */
 exports.createFeatureRequest = async (req, res, next) => {
   try {
-    const { title, description, requestedBy, priority = 'Medium' } = req.body;
+    const { title, description, requestedBy, priority = "Medium" } = req.body;
 
     // Create feature request in database
     const featureRequest = await prisma.featureRequest.create({
@@ -26,13 +26,15 @@ exports.createFeatureRequest = async (req, res, next) => {
       },
     });
 
-    res.status(201).json(
-      formatSuccess(
-        featureRequest,
-        'Feature request created successfully',
-        201
-      )
-    );
+    res
+      .status(201)
+      .json(
+        formatSuccess(
+          featureRequest,
+          "Feature request created successfully",
+          201,
+        ),
+      );
   } catch (error) {
     next(error);
   }
@@ -46,8 +48,8 @@ exports.getAllFeatureRequests = async (req, res, next) => {
   try {
     // Extract query parameters with defaults
     const {
-      sortBy = 'createdAt',
-      sortOrder = 'desc',
+      sortBy = "createdAt",
+      sortOrder = "desc",
       status,
       priority,
       page = 1,
@@ -82,7 +84,7 @@ exports.getAllFeatureRequests = async (req, res, next) => {
     const totalPages = Math.ceil(totalItems / limitNum);
 
     const responseData = {
-      data: featureRequests,
+      items: featureRequests,
       pagination: {
         totalItems,
         currentPage: pageNum,
@@ -91,13 +93,15 @@ exports.getAllFeatureRequests = async (req, res, next) => {
       },
     };
 
-    res.status(200).json(
-      formatSuccess(
-        responseData,
-        'Feature requests retrieved successfully',
-        200
-      )
-    );
+    res
+      .status(200)
+      .json(
+        formatSuccess(
+          responseData,
+          "Feature requests retrieved successfully",
+          200,
+        ),
+      );
   } catch (error) {
     next(error);
   }
@@ -118,22 +122,26 @@ exports.getFeatureRequestById = async (req, res, next) => {
 
     // Check if feature request exists
     if (!featureRequest) {
-      return res.status(404).json(
-        formatError(
-          `Feature request with ID ${id} not found`,
-          'FEATURE_REQUEST_NOT_FOUND',
-          404
-        )
-      );
+      return res
+        .status(404)
+        .json(
+          formatError(
+            `Feature request with ID ${id} not found`,
+            "FEATURE_REQUEST_NOT_FOUND",
+            404,
+          ),
+        );
     }
 
-    res.status(200).json(
-      formatSuccess(
-        featureRequest,
-        'Feature request retrieved successfully',
-        200
-      )
-    );
+    res
+      .status(200)
+      .json(
+        formatSuccess(
+          featureRequest,
+          "Feature request retrieved successfully",
+          200,
+        ),
+      );
   } catch (error) {
     next(error);
   }
@@ -147,7 +155,7 @@ exports.updateFeatureRequestStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const updatedBy = req.body.updatedBy || 'System'; // In a real app, this would come from authenticated user
+    const updatedBy = req.body.updatedBy || "System"; // In a real app, this would come from authenticated user
 
     // Check if feature request exists
     const existingRequest = await prisma.featureRequest.findUnique({
@@ -155,13 +163,15 @@ exports.updateFeatureRequestStatus = async (req, res, next) => {
     });
 
     if (!existingRequest) {
-      return res.status(404).json(
-        formatError(
-          `Feature request with ID ${id} not found`,
-          'FEATURE_REQUEST_NOT_FOUND',
-          404
-        )
-      );
+      return res
+        .status(404)
+        .json(
+          formatError(
+            `Feature request with ID ${id} not found`,
+            "FEATURE_REQUEST_NOT_FOUND",
+            404,
+          ),
+        );
     }
 
     // Update feature request status
@@ -173,13 +183,15 @@ exports.updateFeatureRequestStatus = async (req, res, next) => {
       },
     });
 
-    res.status(200).json(
-      formatSuccess(
-        updatedFeatureRequest,
-        'Feature request status updated successfully',
-        200
-      )
-    );
+    res
+      .status(200)
+      .json(
+        formatSuccess(
+          updatedFeatureRequest,
+          "Feature request status updated successfully",
+          200,
+        ),
+      );
   } catch (error) {
     next(error);
   }
@@ -199,13 +211,15 @@ exports.deleteFeatureRequest = async (req, res, next) => {
     });
 
     if (!existingRequest) {
-      return res.status(404).json(
-        formatError(
-          `Feature request with ID ${id} not found`,
-          'FEATURE_REQUEST_NOT_FOUND',
-          404
-        )
-      );
+      return res
+        .status(404)
+        .json(
+          formatError(
+            `Feature request with ID ${id} not found`,
+            "FEATURE_REQUEST_NOT_FOUND",
+            404,
+          ),
+        );
     }
 
     // Delete feature request

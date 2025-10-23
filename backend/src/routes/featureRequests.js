@@ -1,8 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { body, param, query } = require('express-validator');
-const featureRequestController = require('../controllers/featureRequestController');
-const validate = require('../middlewares/validator');
+const { body, param, query } = require("express-validator");
+const featureRequestController = require("../controllers/featureRequestController");
+const validate = require("../middlewares/validator");
 
 /**
  * @swagger
@@ -55,6 +55,54 @@ const validate = require('../middlewares/validator');
  *         createdAt: 2023-01-01T00:00:00.000Z
  *         updatedAt: 2023-01-01T00:00:00.000Z
  *         updatedBy: null
+ *     FeatureRequestResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Feature request retrieved successfully"
+ *         data:
+ *           $ref: '#/components/schemas/FeatureRequest'
+ *         statusCode:
+ *           type: integer
+ *           example: 200
+ *     FeatureRequestListResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: "Feature requests retrieved successfully"
+ *         data:
+ *           type: object
+ *           properties:
+ *             items:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/FeatureRequest'
+ *             pagination:
+ *               type: object
+ *               properties:
+ *                 totalItems:
+ *                   type: integer
+ *                   example: 1
+ *                 currentPage:
+ *                   type: integer
+ *                   example: 1
+ *                 totalPages:
+ *                   type: integer
+ *                   example: 1
+ *                 itemsPerPage:
+ *                   type: integer
+ *                   example: 10
+ *         statusCode:
+ *           type: integer
+ *           example: 200
  */
 
 /**
@@ -88,19 +136,19 @@ const validate = require('../middlewares/validator');
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/FeatureRequest'
+ *               $ref: '#/components/schemas/FeatureRequestResponse'
  *       400:
  *         description: Invalid input
  */
 router.post(
-  '/',
+  "/",
   validate([
-    body('title').notEmpty().withMessage('Title is required'),
-    body('description').notEmpty().withMessage('Description is required'),
-    body('priority')
+    body("title").notEmpty().withMessage("Title is required"),
+    body("description").notEmpty().withMessage("Description is required"),
+    body("priority")
       .optional()
-      .isIn(['Low', 'Medium', 'High', 'Critical'])
-      .withMessage('Priority must be Low, Medium, High, or Critical'),
+      .isIn(["Low", "Medium", "High", "Critical"])
+      .withMessage("Priority must be Low, Medium, High, or Critical"),
   ]),
   featureRequestController.createFeatureRequest
 );
@@ -152,48 +200,42 @@ router.post(
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/FeatureRequest'
- *                 pagination:
- *                   type: object
- *                   properties:
- *                     totalItems:
- *                       type: integer
- *                     currentPage:
- *                       type: integer
- *                     totalPages:
- *                       type: integer
- *                     itemsPerPage:
- *                       type: integer
+ *               $ref: '#/components/schemas/FeatureRequestListResponse'
  */
 router.get(
-  '/',
+  "/",
   validate([
-    query('sortBy')
+    query("sortBy")
       .optional()
-      .isIn(['title', 'status', 'priority', 'createdAt'])
-      .withMessage('sortBy must be title, status, priority, or createdAt'),
-    query('sortOrder')
+      .isIn(["title", "status", "priority", "createdAt"])
+      .withMessage("sortBy must be title, status, priority, or createdAt"),
+    query("sortOrder")
       .optional()
-      .isIn(['asc', 'desc'])
-      .withMessage('sortOrder must be asc or desc'),
-    query('status')
+      .isIn(["asc", "desc"])
+      .withMessage("sortOrder must be asc or desc"),
+    query("status")
       .optional()
-      .isIn(['New', 'Open', 'InProgress', 'UnderReview', 'Completed', 'Rejected'])
-      .withMessage('Invalid status'),
-    query('priority')
+      .isIn([
+        "New",
+        "Open",
+        "InProgress",
+        "UnderReview",
+        "Completed",
+        "Rejected",
+      ])
+      .withMessage("Invalid status"),
+    query("priority")
       .optional()
-      .isIn(['Low', 'Medium', 'High', 'Critical'])
-      .withMessage('Invalid priority'),
-    query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer'),
-    query('limit')
+      .isIn(["Low", "Medium", "High", "Critical"])
+      .withMessage("Invalid priority"),
+    query("page")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Page must be a positive integer"),
+    query("limit")
       .optional()
       .isInt({ min: 1, max: 100 })
-      .withMessage('Limit must be between 1 and 100'),
+      .withMessage("Limit must be between 1 and 100"),
   ]),
   featureRequestController.getAllFeatureRequests
 );
@@ -217,14 +259,14 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/FeatureRequest'
+ *               $ref: '#/components/schemas/FeatureRequestResponse'
  *       404:
  *         description: Feature request not found
  */
 router.get(
-  '/:id',
+  "/:id",
   validate([
-    param('id').notEmpty().withMessage('Feature request ID is required')
+    param("id").notEmpty().withMessage("Feature request ID is required"),
   ]),
   featureRequestController.getFeatureRequestById
 );
@@ -260,21 +302,28 @@ router.get(
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/FeatureRequest'
+ *               $ref: '#/components/schemas/FeatureRequestResponse'
  *       400:
  *         description: Invalid input
  *       404:
  *         description: Feature request not found
  */
 router.put(
-  '/:id/status',
+  "/:id/status",
   validate([
-    param('id').notEmpty().withMessage('Feature request ID is required'),
-    body('status')
+    param("id").notEmpty().withMessage("Feature request ID is required"),
+    body("status")
       .notEmpty()
-      .withMessage('Status is required')
-      .isIn(['New', 'Open', 'InProgress', 'UnderReview', 'Completed', 'Rejected'])
-      .withMessage('Invalid status'),
+      .withMessage("Status is required")
+      .isIn([
+        "New",
+        "Open",
+        "InProgress",
+        "UnderReview",
+        "Completed",
+        "Rejected",
+      ])
+      .withMessage("Invalid status"),
   ]),
   featureRequestController.updateFeatureRequestStatus
 );
@@ -299,9 +348,9 @@ router.put(
  *         description: Feature request not found
  */
 router.delete(
-  '/:id',
+  "/:id",
   validate([
-    param('id').notEmpty().withMessage('Feature request ID is required')
+    param("id").notEmpty().withMessage("Feature request ID is required"),
   ]),
   featureRequestController.deleteFeatureRequest
 );

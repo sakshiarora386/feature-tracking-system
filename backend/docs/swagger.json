@@ -58,7 +58,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FeatureRequest"
+                  "$ref": "#/components/schemas/FeatureRequestResponse"
                 }
               }
             }
@@ -153,32 +153,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/FeatureRequest"
-                      }
-                    },
-                    "pagination": {
-                      "type": "object",
-                      "properties": {
-                        "totalItems": {
-                          "type": "integer"
-                        },
-                        "currentPage": {
-                          "type": "integer"
-                        },
-                        "totalPages": {
-                          "type": "integer"
-                        },
-                        "itemsPerPage": {
-                          "type": "integer"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/FeatureRequestListResponse"
                 }
               }
             }
@@ -209,7 +184,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FeatureRequest"
+                  "$ref": "#/components/schemas/FeatureRequestResponse"
                 }
               }
             }
@@ -294,7 +269,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FeatureRequest"
+                  "$ref": "#/components/schemas/FeatureRequestResponse"
                 }
               }
             }
@@ -381,6 +356,75 @@
           "createdAt": "2023-01-01T00:00:00.000Z",
           "updatedAt": "2023-01-01T00:00:00.000Z",
           "updatedBy": null
+        }
+      },
+      "FeatureRequestResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Feature request retrieved successfully"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FeatureRequest"
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 200
+          }
+        }
+      },
+      "FeatureRequestListResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "message": {
+            "type": "string",
+            "example": "Feature requests retrieved successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FeatureRequest"
+                }
+              },
+              "pagination": {
+                "type": "object",
+                "properties": {
+                  "totalItems": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "currentPage": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "totalPages": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "itemsPerPage": {
+                    "type": "integer",
+                    "example": 10
+                  }
+                }
+              }
+            }
+          },
+          "statusCode": {
+            "type": "integer",
+            "example": 200
+          }
         }
       }
     }
