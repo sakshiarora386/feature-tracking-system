@@ -8,29 +8,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Priority {
-  Low
-  Medium
-  High
-  Critical
-}
-
-enum Status {
-  New
-  Open
-  InProgress
-  UnderReview
-  Completed
-  Rejected
-}
-
 model FeatureRequest {
   id          String   @id @default(cuid())
   title       String
   description String
   requestedBy String?
-  priority    Priority @default(Medium)
-  status      Status   @default(New)
+  priority    String   @default("Medium")
+  status      String   @default("New")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   updatedBy   String?

@@ -13,7 +13,7 @@ const injectedRtkApi = api
         query: (queryArg) => ({
           url: `/feature-requests`,
           method: "POST",
-          body: queryArg,
+          body: queryArg.body,
         }),
         invalidatesTags: ["Feature Requests"],
       }),
@@ -57,7 +57,7 @@ const injectedRtkApi = api
         GetFeatureRequestsByIdApiArg
       >({
         query: (queryArg) => ({
-          url: `/feature-requests/${encodeURIComponent(String(queryArg))}`,
+          url: `/feature-requests/${encodeURIComponent(String(queryArg.id))}`,
         }),
         providesTags: ["Feature Requests"],
       }),
@@ -66,7 +66,7 @@ const injectedRtkApi = api
         DeleteFeatureRequestsByIdApiArg
       >({
         query: (queryArg) => ({
-          url: `/feature-requests/${encodeURIComponent(String(queryArg))}`,
+          url: `/feature-requests/${encodeURIComponent(String(queryArg.id))}`,
           method: "DELETE",
         }),
         invalidatesTags: ["Feature Requests"],
@@ -87,23 +87,17 @@ const injectedRtkApi = api
   });
 export { injectedRtkApi as featureRequestApiApi };
 export type PostFeatureRequestsApiResponse =
-  /** status 201 Feature request created successfully */ FeatureRequest;
+  /** status 201 Feature request created successfully */ FeatureRequestResponse;
 export type PostFeatureRequestsApiArg = {
-  title: string;
-  description: string;
-  requestedBy?: string;
-  priority?: "Low" | "Medium" | "High" | "Critical";
+  body: {
+    title: string;
+    description: string;
+    requestedBy?: string;
+    priority?: "Low" | "Medium" | "High" | "Critical";
+  };
 };
 export type GetFeatureRequestsApiResponse =
-  /** status 200 List of feature requests */ {
-    data?: FeatureRequest[];
-    pagination?: {
-      totalItems?: number;
-      currentPage?: number;
-      totalPages?: number;
-      itemsPerPage?: number;
-    };
-  };
+  /** status 200 List of feature requests */ FeatureRequestListResponse;
 export type GetFeatureRequestsApiArg = {
   /** Field to sort by */
   sortBy?: "title" | "status" | "priority" | "createdAt";
@@ -125,12 +119,18 @@ export type GetFeatureRequestsApiArg = {
   limit?: number;
 };
 export type GetFeatureRequestsByIdApiResponse =
-  /** status 200 Feature request details */ FeatureRequest;
-export type GetFeatureRequestsByIdApiArg = /** Feature request ID */ string;
+  /** status 200 Feature request details */ FeatureRequestResponse;
+export type GetFeatureRequestsByIdApiArg = {
+  /** Feature request ID */
+  id: string;
+};
 export type DeleteFeatureRequestsByIdApiResponse = unknown;
-export type DeleteFeatureRequestsByIdApiArg = /** Feature request ID */ string;
+export type DeleteFeatureRequestsByIdApiArg = {
+  /** Feature request ID */
+  id: string;
+};
 export type PutFeatureRequestsByIdStatusApiResponse =
-  /** status 200 Status updated successfully */ FeatureRequest;
+  /** status 200 Status updated successfully */ FeatureRequestResponse;
 export type PutFeatureRequestsByIdStatusApiArg = {
   /** Feature request ID */
   id: string;
@@ -169,4 +169,24 @@ export type FeatureRequest = {
   updatedAt?: string;
   /** User who last updated the request */
   updatedBy?: string;
+};
+export type FeatureRequestResponse = {
+  success?: boolean;
+  message?: string;
+  data?: FeatureRequest;
+  statusCode?: number;
+};
+export type FeatureRequestListResponse = {
+  success?: boolean;
+  message?: string;
+  data?: {
+    items?: FeatureRequest[];
+    pagination?: {
+      totalItems?: number;
+      currentPage?: number;
+      totalPages?: number;
+      itemsPerPage?: number;
+    };
+  };
+  statusCode?: number;
 };
